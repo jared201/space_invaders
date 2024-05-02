@@ -1,6 +1,6 @@
 <template>
   <div class="basic-enemy">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="pink" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <svg class="blinking-enemy" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="pink" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
       <path d="M2 7v7l10 5 10-5V7"></path>
       <path d="M2 14l10 5 10-5"></path>
@@ -16,5 +16,14 @@
   position: absolute;
   width: 50px;
   height: 50px;
+}
+.blinking-enemy {
+  animation: blink 1s linear infinite;
+}
+
+@keyframes blink {
+  0% { fill: pink; }
+  50% { fill: blue; }
+  100% { fill: pink; }
 }
 </style>
