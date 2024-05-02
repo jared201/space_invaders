@@ -1,15 +1,18 @@
 <template>
   <div>
     <canvas ref="canvas" :width="width" :height="height"></canvas>
+    <BasicEnemy v-for="(enemy, index) in enemies" :key="index" :style="{ left: (index * 60) + 'px' }" />
     <GroundFighter />
   </div>
 </template>
 
 <script>
 import GroundFighter from './sprites/GroundFighter.vue';
+import BasicEnemy from "./sprites/BasicEnemy.vue";
 
 export default {
   components: {
+    BasicEnemy,
     GroundFighter,
   },
   data() {
@@ -17,6 +20,7 @@ export default {
       width: window.innerWidth,
       height: window.innerHeight,
       stars: 1000, // number of stars
+      enemies: Array(8).fill(null), // array of 8 enemies
     };
   },
   mounted() {
