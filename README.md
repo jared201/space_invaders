@@ -1,6 +1,6 @@
-# space_invaders
+# Space Invaders
 
-This template should help get you started developing with Vue 3 in Vite.
+It's a basic 1977 Game Space Invaders clone made with Vue 3 and Vite.
 
 ## Recommended IDE Setup
 
