@@ -1,7 +1,7 @@
 <template>
   <div>
     <canvas ref="canvas" :width="width" :height="height"></canvas>
-    <BasicEnemy v-for="(enemy, index) in enemies" :key="index" :style="{ left: (index * 60) + 'px' }" />
+    <BasicEnemy v-for="(enemy, index) in enemies" :key="index" :style="{ left: getEnemyPosition(index) + 'px' }" />
     <GroundFighter />
   </div>
 </template>
@@ -21,6 +21,7 @@ export default {
       height: window.innerHeight,
       stars: 1000, // number of stars
       enemies: Array(8).fill(null), // array of 8 enemies
+      enemyWidth: 50, // width of each enemy
     };
   },
   mounted() {
@@ -46,6 +47,12 @@ export default {
         ctx.fillStyle = 'white';
         ctx.fill();
       }
+    },
+    getEnemyPosition(index) {
+      const middle = this.width / 2;
+      const totalEnemiesWidth = this.enemies.length * this.enemyWidth;
+      const startPosition = middle - totalEnemiesWidth / 2;
+      return startPosition + index * this.enemyWidth;
     },
   },
 };
