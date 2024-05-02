@@ -13,32 +13,40 @@ export default {
     return {
       left: 0, // initial position
       projectiles: [], // array to hold the projectiles
+      keys: {} // object to hold the state of the keys
     };
   },
   mounted() {
-    window.addEventListener('keydown', this.moveGroundFighter);
+    window.addEventListener('keydown', this.keydownHandler);
+    window.addEventListener('keyup', this.keyupHandler);
+    setInterval(this.moveGroundFighter, 100); // move the GroundFighter every 100ms
     setInterval(this.moveProjectiles, 100); // move the projectiles every 100ms
   },
   beforeDestroy() {
-    window.removeEventListener('keydown', this.moveGroundFighter);
+    window.removeEventListener('keydown', this.keydownHandler);
+    window.removeEventListener('keyup', this.keyupHandler);
   },
   methods: {
-    moveGroundFighter(event) {
+    keydownHandler(event) {
+      this.keys[event.key] = true;
+    },
+    keyupHandler(event) {
+      this.keys[event.key] = false;
+    },
+    moveGroundFighter() {
       const step = 10; // change this value to make the sprite move faster or slower
-      switch (event.key) {
-        case 'ArrowLeft':
-          this.left = Math.max(this.left - step, 0);
-          break;
-        case 'ArrowRight':
-          this.left = Math.min(this.left + step, window.innerWidth - 50); // 50 is the width of the sprite
-          break;
-        case ' ':
-          this.fireProjectile();
-          break;
+      if (this.keys['ArrowLeft']) {
+        this.left = Math.max(this.left - step, 0);
+      }
+      if (this.keys['ArrowRight']) {
+        this.left = Math.min(this.left + step, window.innerWidth - 50); // 50 is the width of the sprite
+      }
+      if (this.keys[' ']) {
+        this.fireProjectile();
       }
     },
     fireProjectile() {
-      this.projectiles.push({x: this.left + 25, y: window.innerHeight - 80}); // 25 is half the width of the sprite, 80 is the height of the sprite plus a little extra
+      this.projectiles.push({ x: this.left + 25, y: window.innerHeight - 80 }); // 25 is half the width of the sprite, 80 is the height of the sprite plus a little extra
     },
     moveProjectiles() {
       for (let i = 0; i < this.projectiles.length; i++) {
