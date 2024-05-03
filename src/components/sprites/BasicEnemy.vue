@@ -51,28 +51,19 @@ export default {
       if (Math.random() > 0.95) {
         this.direction = Math.random() > 0.5 ? 'right' : 'left';
       }
-      //add a collision detection that works when the projectile hits the enemy
+      //add a collision detection for the projectiles and the BasicEnemy
 
       for (let i = 0; i < this.projectiles.length; i++) {
-        const projectile = this.projectiles[i];
-        const enemyBox = { x: this.x, y: this.y, width: this.$el.offsetWidth, height: this.$el.offsetHeight };
-        const projectileBox = { x: projectile.x, y: projectile.y, width: projectile.width, height: projectile.height };
+        const dx = this.projectiles[i].x - this.x;
+        const dy = this.projectiles[i].y - this.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const radiusSum = 25; // sum of the radii of the projectile and the enemy
 
-
-        if (
-            enemyBox.x < projectileBox.x + projectileBox.width &&
-            enemyBox.x + enemyBox.width > projectileBox.x &&
-            enemyBox.y < projectileBox.y + projectileBox.height &&
-            enemyBox.y + enemyBox.height > projectileBox.y
-        ) {
-          this.isHit = true; // Mark the BasicEnemy as hit
-          this.$emit('removeProjectile', i); // i is the index of the projectile to be removed
-          this.$emit('hit', { enemyIndex: this.index, projectileIndex: i }); // Emit a hit event with the index of the hit enemy and projectile
-          break;
+        if (distance < radiusSum) {
+          this.isHit = true;
+          this.$emit('hit', this.index);
         }
       }
-
-
     },
   },
   mounted() {

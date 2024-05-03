@@ -10,8 +10,7 @@
          @hit="handleEnemyHit(index)"
         @removeProjectile="handleRemoveProjectile"
     />
-    <GroundFighter @move="handleFighterMove" />
-  </div>
+    <GroundFighter @move="handleFighterMove" @projectilesUpdated="updateProjectiles" />  </div>
 </template>
 
 
@@ -41,6 +40,9 @@ export default {
     this.drawStars();
   },
   methods: {
+    updateProjectiles(newProjectiles) {
+      this.projectiles = newProjectiles;
+    },
     handleRemoveProjectile(projectileIndex) {
       this.projectiles.splice(projectileIndex, 1);
     },

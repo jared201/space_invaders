@@ -49,6 +49,8 @@ export default {
     },
     fireProjectile() {
       this.projectiles.push({ x: this.left + 25, y: window.innerHeight - 80 }); // 25 is half the width of the sprite, 80 is the height of the sprite plus a little extra
+      this.$emit('projectilesUpdated', this.projectiles); // emit the event
+
     },
     moveProjectiles() {
       for (let i = 0; i < this.projectiles.length; i++) {
@@ -58,6 +60,7 @@ export default {
           i--; // adjust the index after removing an item
         }
       }
+      this.$emit('projectilesUpdated', this.projectiles); // emit the event
     },
   },
 };
