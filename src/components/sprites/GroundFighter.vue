@@ -44,6 +44,8 @@ export default {
       if (this.keys[' ']) {
         this.fireProjectile();
       }
+      this.$emit('move', this.left); // emit the move event with the new x position
+
     },
     fireProjectile() {
       this.projectiles.push({ x: this.left + 25, y: window.innerHeight - 80 }); // 25 is half the width of the sprite, 80 is the height of the sprite plus a little extra

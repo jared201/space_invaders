@@ -1,10 +1,11 @@
 <template>
   <div>
     <canvas ref="canvas" :width="width" :height="height"></canvas>
-    <BasicEnemy v-for="(enemy, index) in enemies" :key="index" :style="{ left: getEnemyPosition(index) + 'px' }" />
-    <GroundFighter />
+    <BasicEnemy v-for="(enemy, index) in enemies" :key="index" :style="{ left: getEnemyPosition(index) + 'px' }" :fighterX="fighterX" />
+    <GroundFighter @move="handleFighterMove" />
   </div>
 </template>
+
 
 <script>
 import GroundFighter from './sprites/GroundFighter.vue';
@@ -22,6 +23,7 @@ export default {
       stars: 1000, // number of stars
       enemies: Array(8).fill(null), // array of 8 enemies
       enemyWidth: 50, // width of each enemy
+      fighterX: 0, // initial x position of the GroundFighter
     };
   },
   mounted() {
@@ -53,6 +55,9 @@ export default {
       const totalEnemiesWidth = this.enemies.length * this.enemyWidth;
       const startPosition = middle - totalEnemiesWidth / 2;
       return startPosition + index * this.enemyWidth;
+    },
+    handleFighterMove(newX) {
+      this.fighterX = newX;
     },
   },
 };
