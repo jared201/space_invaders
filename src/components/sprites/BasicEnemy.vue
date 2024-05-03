@@ -1,5 +1,5 @@
 <template>
-  <div class="basic-enemy" :style="{ left: x + 'px', top: y + 'px' }">
+  <div class="basic-enemy" :style="{ left: x + 'px', top: y + 'px' }" v-if="!isHit">
     <svg class="blinking-enemy" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="pink" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
       <path d="M2 7v7l10 5 10-5V7"></path>
@@ -12,43 +12,67 @@
 </template>
 <script>
 export default {
-  props: ['fighterX'], // position of the GroundFighter
+  props: ['fighterX', 'projectiles', 'index'], // position of the GroundFighter
   data() {
     return {
       x: 0, // initial x position
       y: 0, // initial y position
       direction: 'right', // initial direction
       counter: 0, // counter for vertical movement
+      isHit: false, // Add isHit data property
     };
   },
   methods: {
     move() {
-      const canvasWidth = this.$parent.width; // assuming the parent component has a width property
-
-      // Determine direction based on the position of the GroundFighter
-      if (this.x < this.fighterX) {
-        this.direction = 'right';
-      } else  if (this.x > this.fighterX) {
-        this.direction = 'left';
-      }
-
-      // Move left or right depending on the direction
       if (this.direction === 'right') {
-        this.x = Math.min(this.x + 10, canvasWidth - 50); // adjust this value to change the speed of horizontal movement
+        this.x += 10;
       } else {
-        this.x = Math.max(this.x - 10, 0); // adjust this value to change the speed of horizontal movement
+        this.x -= 10;
       }
+      this.counter++;
+      if (this.counter === 5) {
+        this.y += 10;
+        this.counter = 0;
+        this.direction = this.direction === 'right' ? 'left' : 'right';
+      }
+      if (this.y > window.innerHeight) {
+        this.y = 0;
+      }
+      if (this.x > window.innerWidth) {
+        this.x = 0;
+      }
+      //follow the GroundFighter
+      if (this.x < this.fighterX) {
+        this.x += 5;
+      } else {
+        this.x -= 5;
+      }
+      // let enemies fly in random directions
+      if (Math.random() > 0.95) {
+        this.direction = Math.random() > 0.5 ? 'right' : 'left';
+      }
+      //add a collision detection that works when the projectile hits the enemy
 
-      // Move down every second
-      if (Date.now() % 1000 === 0) {
-        this.y += 10; // adjust this value to change the speed of downward movement
-        this.counter += 1; // increment the counter
+      for (let i = 0; i < this.projectiles.length; i++) {
+        const projectile = this.projectiles[i];
+        const enemyBox = { x: this.x, y: this.y, width: this.$el.offsetWidth, height: this.$el.offsetHeight };
+        const projectileBox = { x: projectile.x, y: projectile.y, width: projectile.width, height: projectile.height };
 
-        // Change direction after every 10 vertical movements
-        if (this.counter % 10 === 0) {
-          this.direction = this.direction === 'right' ? 'left' : 'right';
+
+        if (
+            enemyBox.x < projectileBox.x + projectileBox.width &&
+            enemyBox.x + enemyBox.width > projectileBox.x &&
+            enemyBox.y < projectileBox.y + projectileBox.height &&
+            enemyBox.y + enemyBox.height > projectileBox.y
+        ) {
+          this.isHit = true; // Mark the BasicEnemy as hit
+          this.$emit('removeProjectile', i); // i is the index of the projectile to be removed
+          this.$emit('hit', { enemyIndex: this.index, projectileIndex: i }); // Emit a hit event with the index of the hit enemy and projectile
+          break;
         }
       }
+
+
     },
   },
   mounted() {

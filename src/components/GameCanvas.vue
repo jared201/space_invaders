@@ -1,7 +1,15 @@
 <template>
   <div>
     <canvas ref="canvas" :width="width" :height="height"></canvas>
-    <BasicEnemy v-for="(enemy, index) in enemies" :key="index" :style="{ left: getEnemyPosition(index) + 'px' }" :fighterX="fighterX" />
+    <BasicEnemy
+        v-for="(enemy, index) in enemies"
+        :key="index"
+        :index="index"
+        :fighterX="enemy.fighterX"
+        :projectiles="projectiles"
+         @hit="handleEnemyHit(index)"
+        @removeProjectile="handleRemoveProjectile"
+    />
     <GroundFighter @move="handleFighterMove" />
   </div>
 </template>
@@ -21,15 +29,21 @@ export default {
       width: window.innerWidth,
       height: window.innerHeight,
       stars: 1000, // number of stars
-      enemies: Array(8).fill(null), // array of 8 enemies
+      enemies: Array.from({ length: 8 }, (_, i) => ({
+        fighterX: i * 100, // Adjust this value to set the initial position of each BasicEnemy
+      })),
       enemyWidth: 50, // width of each enemy
       fighterX: 0, // initial x position of the GroundFighter
+      projectiles: [], // array to hold the projectiles
     };
   },
   mounted() {
     this.drawStars();
   },
   methods: {
+    handleRemoveProjectile(projectileIndex) {
+      this.projectiles.splice(projectileIndex, 1);
+    },
     drawStars() {
       const canvas = this.$refs.canvas;
       const ctx = canvas.getContext('2d');
@@ -50,16 +64,41 @@ export default {
         ctx.fill();
       }
     },
-    getEnemyPosition(index) {
-      const middle = this.width / 2;
-      const totalEnemiesWidth = this.enemies.length * this.enemyWidth;
-      const startPosition = middle - totalEnemiesWidth / 2;
-      return startPosition + index * this.enemyWidth;
-    },
+
     handleFighterMove(newX) {
       this.fighterX = newX;
+      this.checkCollisions();
+
     },
+    handleEnemyHit({ enemyIndex, projectileIndex }) {
+      // Remove the hit BasicEnemy from the enemies array
+      this.enemies.splice(enemyIndex, 1);
+
+      // Remove the hit projectile from the projectiles array
+      this.projectiles.splice(projectileIndex, 1);
+    },
+    checkCollisions() {
+      for (let i = 0; i < this.enemies.length; i++) {
+        for (let j = 0; j < this.projectiles.length; j++) {
+          const enemy = this.enemies[i];
+          const projectile = this.projectiles[j];
+          const enemyBox = {x: enemy.x, y: enemy.y, width: this.enemyWidth, height: this.enemyWidth};
+          const projectileBox = {x: projectile.x, y: projectile.y, width: projectile.width, height: projectile.height};
+
+          if (
+              enemyBox.x < projectileBox.x + projectileBox.width &&
+              enemyBox.x + enemyBox.width > projectileBox.x &&
+              enemyBox.y < projectileBox.y + projectileBox.height &&
+              enemyBox.y + enemyBox.height > projectileBox.y
+          ) {
+            this.handleEnemyHit({enemyIndex: i, projectileIndex: j});
+            break;
+          }
+        }
+      }
+    }
   },
+
 };
 </script>
 
