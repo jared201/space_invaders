@@ -1,6 +1,6 @@
 <template>
   <div>
-    <canvas ref="canvas" :width="width" :height="height"></canvas>
+    <canvas class="star" r e f="canvas" :width="width" :height="height"></canvas>
     <BasicEnemy
         v-for="(enemy, index) in enemies"
         :key="index"
@@ -105,6 +105,14 @@ export default {
 </script>
 
 <style scoped>
+.star {
+  box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #fff;
+  animation: glow 2s infinite;
+}
+.star {
+  box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #fff;
+  animation: glow 2s infinite;
+}
 canvas {
   position: absolute;
   top: 0;
