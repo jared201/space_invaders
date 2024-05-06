@@ -1,13 +1,14 @@
 <template>
   <div>
-    <canvas class="star" r e f="canvas" :width="width" :height="height"></canvas>
+    <SplashScreen v-if="!gameStarted" @start="startGame" />
+    <canvas class="star" ref="canvas" :width="width" :height="height"></canvas>
     <BasicEnemy
         v-for="(enemy, index) in enemies"
         :key="index"
         :index="index"
         :fighterX="enemy.fighterX"
         :projectiles="projectiles"
-         @hit="handleEnemyHit(index)"
+        @hit="handleEnemyHit"
         @removeProjectile="handleRemoveProjectile"
     />
     <GroundFighter @move="handleFighterMove" @projectilesUpdated="updateProjectiles" />  </div>
@@ -17,11 +18,13 @@
 <script>
 import GroundFighter from './sprites/GroundFighter.vue';
 import BasicEnemy from "./sprites/BasicEnemy.vue";
+import SplashScreen from './SplashScreen.vue';
 
 export default {
   components: {
     BasicEnemy,
     GroundFighter,
+    SplashScreen,
   },
   data() {
     return {
@@ -34,12 +37,23 @@ export default {
       enemyWidth: 50, // width of each enemy
       fighterX: 0, // initial x position of the GroundFighter
       projectiles: [], // array to hold the projectiles
+      gameStarted: false, // Add this line
     };
   },
   mounted() {
+    this.showSplashScreen();
     this.drawStars();
   },
-  methods: {
+  methods: { //add splash screen methods
+    showSplashScreen() {
+      this.gameStarted = false; // Set gameStarted to false when the game starts
+      this.$refs.canvas.style.display = 'none';
+    },
+    startGame() {
+      console.log('Game started');
+      this.gameStarted = true; // Set gameStarted to true when the game starts
+      this.$refs.canvas.style.display = 'block';
+    },
     updateProjectiles(newProjectiles) {
       this.projectiles = newProjectiles;
     },
@@ -62,7 +76,7 @@ export default {
 
         ctx.beginPath();
         ctx.arc(x, y, radius, 0, Math.PI * 2, false);
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = 'yellow';
         ctx.fill();
       }
     },
@@ -105,10 +119,6 @@ export default {
 </script>
 
 <style scoped>
-.star {
-  box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #fff;
-  animation: glow 2s infinite;
-}
 .star {
   box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #fff;
   animation: glow 2s infinite;
