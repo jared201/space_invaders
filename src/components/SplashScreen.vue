@@ -13,6 +13,7 @@
 
 
     </pre>
+    <h4>A game by Jared Odulio</h4>
     <h2>Press Any Key To Start</h2>
   </div>
 </template>
@@ -62,8 +63,15 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5); /* Change this line */
+  background-color: black; /* Change this line */
   color: white;
   font-size: 2em;
+}
+.splash-screen h2 {
+  font-family: 'Press Start 2P', cursive;
+}
+.splash-screen pre {
+  background-color: black;
+  color: yellow; /* Change text color to black for better visibility */
 }
 </style>
