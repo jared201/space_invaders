@@ -5,10 +5,10 @@
     <IntermediateEnemy
         v-for="(enemy, index) in intermediateEnemies"
         :key="index"
-        :x="enemy.fighterX"
-        :y="enemy.y"
-        @move="handleEnemyMove(index)"
-        @fire="handleEnemyFire(index)"
+        :fighterX="enemy.fighterX"
+        :projectiles="projectiles"
+        :index="index"
+        :x = "enemy.x"
     />
     <BasicEnemy
         v-for="(enemy, index) in enemies"
@@ -27,7 +27,7 @@
 import GroundFighter from './sprites/GroundFighter.vue';
 import BasicEnemy from "./sprites/BasicEnemy.vue";
 import SplashScreen from './SplashScreen.vue';
-import IntermediateEnemy from "@/components/sprites/IntermediateEnemy.vue";
+import IntermediateEnemy from './sprites/IntermediateEnemy.vue';
 
 export default {
   components: {
@@ -48,11 +48,19 @@ export default {
       fighterX: 0, // initial x position of the GroundFighter
       projectiles: [], // array to hold the projectiles
       gameStarted: false, // Add this line
-      intermediateEnemies: Array.from({ length: 8 }, (_, i) => ({
-        x: i * 100,
-        y: 100,
-      })),
+      intermediateEnemies: [],
     };
+  },
+  created() {
+    // Initialize the intermediateEnemies array
+    for (let i = 0; i < 8; i++) {
+      console.log('i', i)
+      this.intermediateEnemies.push({
+        fighterX: i * 100, // Adjust this value as needed,
+        x: i * 100,
+        y: 10,
+      });
+    }
   },
   mounted() {
     this.showSplashScreen();

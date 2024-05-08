@@ -2,6 +2,8 @@
 
 It's a basic 1977 Game Space Invaders clone made with Vue 3 and Vite.
 
+![img.png](img.png)
+
 ## Recommended IDE Setup
 
 [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).

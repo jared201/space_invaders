@@ -26,10 +26,7 @@ export default {
     };
   },
   props: {
-    show: {
-      type: Boolean,
-      default: true,
-    },
+
     gameStarted: {
       type: Boolean,
       default: false,
