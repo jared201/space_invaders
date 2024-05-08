@@ -2,6 +2,14 @@
   <div>
     <SplashScreen v-if="!gameStarted" @start="startGame" />
     <canvas class="star" ref="canvas" :width="width" :height="height"></canvas>
+    <IntermediateEnemy
+        v-for="(enemy, index) in intermediateEnemies"
+        :key="index"
+        :fighterX="enemy.fighterX"
+        :projectiles="projectiles"
+        :index="index"
+        :x = "enemy.x"
+    />
     <BasicEnemy
         v-for="(enemy, index) in enemies"
         :key="index"
@@ -19,9 +27,11 @@
 import GroundFighter from './sprites/GroundFighter.vue';
 import BasicEnemy from "./sprites/BasicEnemy.vue";
 import SplashScreen from './SplashScreen.vue';
+import IntermediateEnemy from './sprites/IntermediateEnemy.vue';
 
 export default {
   components: {
+    IntermediateEnemy,
     BasicEnemy,
     GroundFighter,
     SplashScreen,
@@ -38,7 +48,19 @@ export default {
       fighterX: 0, // initial x position of the GroundFighter
       projectiles: [], // array to hold the projectiles
       gameStarted: false, // Add this line
+      intermediateEnemies: [],
     };
+  },
+  created() {
+    // Initialize the intermediateEnemies array
+    for (let i = 0; i < 8; i++) {
+      console.log('i', i)
+      this.intermediateEnemies.push({
+        fighterX: i * 100, // Adjust this value as needed,
+        x: i * 100,
+        y: 10,
+      });
+    }
   },
   mounted() {
     this.showSplashScreen();
@@ -112,7 +134,18 @@ export default {
           }
         }
       }
-    }
+    },
+    handleEnemyMove(index) {
+      this.enemies[index].x = Math.random() * this.width;
+    },
+    handleEnemyFire(index) {
+      this.projectiles.push({
+        x: this.enemies[index].x + this.enemyWidth / 2,
+        y: this.enemies[index].y + this.enemyWidth,
+        width: 5,
+        height: 10,
+      });
+    },
   },
 
 };
