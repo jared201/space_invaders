@@ -161,4 +161,6 @@ canvas {
   top: 0;
   left: 0;
 }
+/* Add this to your <style> section in GameCanvas.vue */
+
 </style>
